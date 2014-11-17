@@ -15,7 +15,7 @@ Try connecting. Sending beacon 0xA0....
 Send sync magic
 Connect done
 
-Upload file 6223main.bin to 0x40001400
+Upload file MT6223main.bin to 0x40001400
 Bytes to send 9866
 Block  0 send 1024k
 Block  1 send 1024k
