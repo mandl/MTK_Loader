@@ -1,17 +1,19 @@
 
-*Usage:*
+**Usage:**
 
 MTKload.py -h
 
 
 
-*MT6223_BasebandOn.txt*
+**MT6223_BasebandOn.txt**
 
-This is a CVS file.
+This is a simple CVS file.
 
-Register value and command. MTKLoad can send this to your device
-So we can switch on the device before we send the programm. And you can
-release the power button. This is full for longer uploads.
+Register value and command. MTKload can send this to your device
+before doing a upload.
+So we can switch on the device, before we send the programm.
+And you can release the power button. This is very usefull for
+longer uploads.
 
 ```
 0x80210050,0xA357,RTC_POWERKEY1
@@ -21,7 +23,7 @@ release the power button. This is full for longer uploads.
 0x80010078,0x0,EMI_ADMUX
 ```
 
-*MT6223_ExtMem.txt*  
+**MT6223_ExtMem.txt**  
 This files configures the external memory. So we can direct 
 upload to externel memory. Useful for programms bigger then 
 the internal memory.
@@ -30,7 +32,7 @@ Sample:
 
 Uploading main.bin to address 0x0000
 
-**MTKload.py --writeregfile MT6223_ExtMem.txt load_prog main.bin 0x0000**
+*MTKload.py --writeregfile MT6223_ExtMem.txt load_prog main.bin 0x0000*
 
 
 
