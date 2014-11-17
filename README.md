@@ -4,7 +4,7 @@ For more information
 
 http://reverse-stef.blogspot.de/2011/11/gsm-tracker-gt-170.html
 
-Usage:
+**Usage:**
 
 *./MTKload.py load_prog MT6223main.bin* 
 
@@ -41,10 +41,4 @@ FW_VERSION = 0x8a00
 HW_VERSION = 0x8a08
 ```
 and the leds are changing from green to red to blue ...
-
-
-
-
-
-
 
