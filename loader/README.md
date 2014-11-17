@@ -1,5 +1,5 @@
 
-Usage:
+*Usage:*
 
 MTKload.py -h
 
@@ -30,7 +30,7 @@ Sample:
 
 Uploading main.bin to address 0x0000
 
-MTKload.py --writeregfile MT6223_ExtMem.txt load_prog main.bin 0x0000
+**MTKload.py --writeregfile MT6223_ExtMem.txt load_prog main.bin 0x0000**
 
 
 
