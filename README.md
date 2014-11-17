@@ -6,8 +6,7 @@ http://reverse-stef.blogspot.de/2011/11/gsm-tracker-gt-170.html
 
 Usage:
 
-*./MTKload.py load_prog MT6223main.bin 
-
+*./MTKload.py load_prog MT6223main.bin* 
 
 
 ```
