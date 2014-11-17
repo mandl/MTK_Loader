@@ -21,8 +21,8 @@ SREC = $(BASENAME).srec
 HEX = $(BASENAME).hex
 
 #LSCRIPT = flash6223.lds
-#LSCRIPT = ram6223.lds
-LSCRIPT = ext_ram6223.lds
+LSCRIPT = ram6223.lds
+#LSCRIPT = ext_ram6223.lds
 
 
 
@@ -36,7 +36,7 @@ all:$(TARGETS)
 
 
 $(ELFFILE): $(OBJS) Makefile
-	$(LD) -o $(ELFFILE) $(OBJS) -L /home/mandl/workspaces/workspace42/MTKBlink/ -l mini -T $(LSCRIPT) \
+	$(LD) -o $(ELFFILE) $(OBJS) -L . -l mini -T $(LSCRIPT) \
 	-Map $(BASENAME).map
 
 

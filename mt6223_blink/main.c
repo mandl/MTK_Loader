@@ -131,7 +131,7 @@ main(void)
   // disable FIQ
   writel(1, MTK6223_FIQ_CON);
 
-  //memory_init();
+  memory_init();
 
   pll_init();
 
@@ -143,7 +143,7 @@ main(void)
 
   LedGreen(1);
 
-  uart_getchar(1);
+  //uart_getchar(1);
 
   while (1)
     {

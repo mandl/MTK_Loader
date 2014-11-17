@@ -307,7 +307,7 @@ class MTKLoader:
                 integer = f.read(2)
      
         
-        print('Xor hash of %s is 0x%x') % (filename,crcsum)
+        print('checksum of %s is 0x%x') % (filename,crcsum)
         
         
     def readCommandFile(self,regfile):
