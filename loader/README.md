@@ -34,6 +34,26 @@ Uploading main.bin to address 0x0000
 
 *MTKload.py --writeregfile MT6223_ExtMem.txt load_prog main.bin 0x0000*
 
+**MT6223_GetRegs.txt**
+
+Read some registers from device
+
+*MTKload.py --readregfile MT6223_GetRegs.txt load_prog main.bin*
+
+Format: 
+
+Register Value, 0x32=32 bit Read oder 0x16=16 bit Read , Comment
+
+'''
+0x80010078,0x32,EMI_ADMUX
+0x80010000,0x32,EMI_CONA
+0x80010008,0x32,MTK6223_EMI_CONB
+0x80010044,0x32,MTK6223_EMI_GEN
+0x80010040,0x16,MTK6223_EMI_REMAP
+0x00000000,0x16,Memory at 0x0
+
+'''
+
 
 
 
