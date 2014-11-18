@@ -14,10 +14,10 @@ Compile the module
 
 *make -e TOOLS=<path to your toolchain (kernel sdk ndk )>*
 
-Load the kernel via adb to the device an load the driver
+Load the kernel via adb to the device and load the driver
 
 *make copy*
 
 *make load*
 
-Take a look ar the Makefile
+Take a look at the Makefile
