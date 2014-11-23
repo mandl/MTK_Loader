@@ -46,15 +46,17 @@ class MTKLoader:
     # calc xor checksum 0xA4 + address + length
     MTK_C0MMAND_CHECKSUM = 0xA4
     
-    MTK_ROM_BAUD = 19200
     
     WRITE_SIZE = 1024
     
     
   
-    def __init__(self, port = 0):
-        self._port = serial.Serial(port, self.MTK_ROM_BAUD)
+    def __init__(self, port,baud):
+        self._port = serial.Serial(port, baud)
 
+    def changeBaud(self,baud):
+        self._port.setBaudrate(baud)
+    
     """ send baecon """
     def mtksendsync(self):
        
@@ -162,8 +164,9 @@ class MTKLoader:
     """ write a block of words """
     def writeBlock(self,adr,filename):
         
+        odd = 0;
         if not os.path.isfile(filename):
-            raise Exception('Filename is wrong')
+            raise Exception('Can not open file: %s') % (filename)
         
         f = file(filename, 'rb')
         
@@ -173,7 +176,10 @@ class MTKLoader:
         if fileSize == 0:
             raise Exception('File is empty')
         if fileSize % 2:
-            raise Exception ('File is not correct')
+            # odd file size add one byte
+            odd = 1
+            print 'Odd filesize. Add dummy byte'
+            
         
         command = struct.pack('B',self.MTK_COMMAND_WRITE16)
         self._port.write(command)
@@ -210,6 +216,10 @@ class MTKLoader:
             datain = self._port.read(len(var))
             if out != datain :
                 raise Exception('Write/ Read error')
+            if odd == 1:
+                # send dummy byte
+                self._port.write('\x00')
+                datain = self._port.read(1)
             
        
     def readBlock(self,adr,length,filename):
@@ -384,6 +394,10 @@ def main():
             '--port', '-p',
             help = 'Serial port device',
             default = '/dev/ttyUSB0')
+    parser.add_argument(
+            '--baud', '-b',
+            help = 'Serial baudrate',
+            default = '19200')   
     
     parser.add_argument(
             '--writeregfile', type=argparse.FileType('r'),
@@ -397,7 +411,7 @@ def main():
     
     subparsers = parser.add_subparsers(
             dest = 'operation',
-            help = 'Run mtktool {command} -h for additional help')
+            help = 'Run MTKload {command} -h for additional help')
 
     parser_write_flash = subparsers.add_parser('load_prog',help = 'Write a binary blob to flash')
     parser_write_flash.add_argument('filename',help = 'Binary file to write', default='main.bin', nargs='?')
@@ -416,7 +430,7 @@ def main():
     # Create the MTKLoader connection object, if needed
     esp = None
     
-    esp = MTKLoader(args.port)
+    esp = MTKLoader(args.port,args.baud)
 
     try:
         esp.connect()
