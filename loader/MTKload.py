@@ -317,8 +317,8 @@ class MTKLoader:
                 integer = f.read(2)
      
         
-        print('checksum of %s is 0x%x') % (filename,crcsum)
-        
+        print('Checksum of %s is 0x%x') % (filename,crcsum)
+        return crcsum
         
     def readCommandFile(self,regfile):
         print 'Read register'
@@ -348,7 +348,21 @@ class MTKLoader:
             else:
                 self.write16(int(row[0],16),int(row[1],16))
             time.sleep(0.2)
-                
+    """ Enable Autobaud and switch to 115200 Baud so we can upload faster """
+    def autoBaud(self):
+        #enable auto baud
+        print 'Autobaud. Set baud to 115200'
+        self.write16(0x80130038,13) # set clock to 26Mhz
+        self.write16(0x80130020,1)  # enable autobaud
+        self._port.setBaudrate(115200)
+        self._port.write('AT')
+        self._port.read(2)
+        self._port.write('\xFF')
+        self._port.read(1)
+        self._port.write('\xFE')
+        self._port.read(1)
+        
+        
     def GenCCITT_CRC16(self,Buffer,crcsum):
         #~~ Generierung der CCITT-CRC16 Checksumme
         bitrange = xrange(8) # 8 Bits
@@ -400,6 +414,11 @@ def main():
             default = '19200')   
     
     parser.add_argument(
+            '--speed', action="store_true", 
+            help = 'Change baudrate to 115200 after connect to device',
+            default = False)   
+    
+    parser.add_argument(
             '--writeregfile', type=argparse.FileType('r'),
             help = 'File config file with write register data')
     parser.add_argument(
@@ -413,9 +432,10 @@ def main():
             dest = 'operation',
             help = 'Run MTKload {command} -h for additional help')
 
-    parser_write_flash = subparsers.add_parser('load_prog',help = 'Write a binary blob to flash')
+    parser_write_flash = subparsers.add_parser('load_prog',help = 'Write a binary blob to memory')
     parser_write_flash.add_argument('filename',help = 'Binary file to write', default='main.bin', nargs='?')
     parser_write_flash.add_argument('loadadr', type=arg_auto_int,default=0x40001400,help = 'Load address for file', nargs='?')
+   
     
     parser_dump_mem = subparsers.add_parser('dump_mem', help = 'Dump memory to a file')
     parser_dump_mem.add_argument('filename',help = 'Binary dump file')
@@ -445,24 +465,27 @@ def main():
     if args.readregfile != None:
         esp.readCommandFile(args.readregfile)
         
-    
+    # change to a higher baudrate
+    if args.speed == True:
+        esp.autoBaud();
 
     if args.operation == 'load_prog':
         
+       
         print 'Upload file %s to 0x%x' %  (args.filename, args.loadadr)
        
-        #print 'Checksum %02x' % esp.getFileCrc(args.filename)
-        
+       
         esp.writeBlock(args.loadadr,args.filename)
         
         fileSize = esp.getSize(args.filename) 
         
-        esp.getFileCrc(args.filename)
+        checksum = esp.getFileCrc(args.filename)
         
         var = esp.calCheckSum(args.loadadr,fileSize/2)
         
-        print 'Checksum 0x%02x'  % var[0]
-        
+        print 'Checksum at device 0x%02x'  % var[0]
+        if checksum != var[0]:
+            print 'Checksum error !!!?????'
         
         esp.startProg(args.loadadr)
        
