@@ -92,9 +92,9 @@ fi
 if [ ! -d $PREFIX/build ]; then
 	mkdir -p $PREFIX/build
 fi
-#if [ ! -d $PREFIX/orig ]; then
-#	mkdir -p $PREFIX/orig
-#fi
+if [ ! -d $PREFIX/orig ]; then
+	mkdir -p $PREFIX/orig
+fi
 if [ ! -d $PREFIX/src ]; then
 	mkdir -p $PREFIX/src
 fi
@@ -199,10 +199,7 @@ export PATH=$PREFIX/bin:$OLDPATH
 cd $PREFIX/build/$BINUTILS
 $PREFIX/src/$BINUTILS/configure --target=$TARGET --prefix=$PREFIX --with-float=soft --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-nls
 # The meaning of flags:
-# --with-cpu=cortex-m4 ..... cortex-m4 CPU
-# --with-fpu=fpv4-sp-d16 ... this CPU has fpv4-sp-d16 FPU
-# --with-float=hard ........ use HW FPU (do not simulate in SW)
-# --with-mode=thumb ........ use Thumb instruction set
+# --with-float=soft ........ simulate in SW
 # --enable-interwork ....... supports calling between ARM and Thumb instruction set
 # --enable-multilib ........ builds for any other unspecified configuration
 # --with-gnu-as ............ use only GNU Assembler
@@ -245,7 +242,7 @@ make install-gcc
 # 3.5 Build & install newlib library
 export PATH=$PREFIX/bin:$OLDPATH
 cd $PREFIX/build/$NEWLIB
-$PREFIX/src/$NEWLIB/configure --target=$TARGET --prefix=$PREFIX --with-float=soft --enable-interwork --disable-multilib --disable-newlib-supplied-syscalls --with-gnu-as --with-gnu-ld --disable-nls --enable-newlib-nano-malloc
+$PREFIX/src/$NEWLIB/configure --target=$TARGET --prefix=$PREFIX --with-thumb --with-float=soft --enable-interwork --enable-multilib --disable-newlib-supplied-syscalls --with-gnu-as --with-gnu-ld --disable-nls --enable-newlib-nano-malloc
 # The meaning of flags:
 # --disable-newlib-supplied-syscalls ... disable syscalls, because we are building for bare-metal target.
 # --enable-newlib-nano-malloc ... enable nano implementation of malloc suitable for devices with limited memory resources
@@ -256,7 +253,7 @@ make install
 # 3.6 Build & install newlib library
 export PATH=$PREFIX/build/nano-libs/bin:$OLDPATH
 cd $PREFIX/build/$NEWLIB_NANO
-$PREFIX/src/$NEWLIB_NANO/configure --target=$TARGET --prefix=$PREFIX/build/nano-libs --with-float=soft --enable-interwork --disable-multilib --with-gnu-as --with-gnu-ld --disable-nls --disable-newlib-supplied-syscalls --enable-newlib-reent-small --disable-newlib-fvwrite-in-streamio --disable-newlib-fseek-optimization --disable-newlib-wide-orient --enable-newlib-nano-malloc --disable-newlib-unbuf-stream-opt --enable-lite-exit --enable-newlib-global-atexit
+$PREFIX/src/$NEWLIB_NANO/configure --target=$TARGET --prefix=$PREFIX/build/nano-libs --with-thumb --with-float=soft --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-nls --disable-newlib-supplied-syscalls --enable-newlib-reent-small --disable-newlib-fvwrite-in-streamio --disable-newlib-fseek-optimization --disable-newlib-wide-orient --enable-newlib-nano-malloc --disable-newlib-unbuf-stream-opt --enable-lite-exit --enable-newlib-global-atexit
 # The meaning of flags:
 # --disable-newlib-supplied-syscalls ... disable syscalls, because we are building for bare-metal target.
 # --enable-newlib-nano-malloc ... enable nano implementation of malloc suitable for devices with limited memory resources
@@ -285,7 +282,7 @@ SRCDIR=$PREFIX/build/nano-libs/arm-none-eabi/lib
 DSTDIR=$PREFIX/arm-none-eabi/lib 
 cp $SRCDIR/./libstdc++.a $DSTDIR/./libstdc++_s.a
 cp $SRCDIR/./libsupc++.a $DSTDIR/./libsupc++_s.a
-for mldir in "." ; do
+for mldir in "." "fpu" "thumb" ; do
 	cp $SRCDIR/$mldir/libc.a $DSTDIR/$mldir/libc_s.a
 	cp $SRCDIR/$mldir/libg.a $DSTDIR/$mldir/libg_s.a
 	cp $SRCDIR/$mldir/librdimon.a $DSTDIR/$mldir/librdimon_s.a
