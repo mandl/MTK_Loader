@@ -523,7 +523,7 @@ if __name__ == '__main__':
     except Exception as ex:
         
         print(ex)
-        traceback.print_exc()  
+        #traceback.print_exc()  
     
        
         

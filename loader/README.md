@@ -54,6 +54,3 @@ Register Value, 0x32=32 bit read oder 0x16=16 bit read , Comment
 ```
 
 
-
-
-
