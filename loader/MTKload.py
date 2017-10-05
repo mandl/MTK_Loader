@@ -219,7 +219,7 @@ class MTKLoader:
                 raise Exception('Write/ Read error')
             if odd == 1:
                 # send dummy byte
-                self._port.write('\x00')
+                self._port.write(b'\x00')
                 datain = self._port.read(1)
             
        
@@ -523,7 +523,7 @@ if __name__ == '__main__':
     except Exception as ex:
         
         print(ex)
-        #traceback.print_exc()  
+        traceback.print_exc()  
     
        
         
